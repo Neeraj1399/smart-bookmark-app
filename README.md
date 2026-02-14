@@ -1,36 +1,56 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+📚 Smart Bookmarks
+A high-performance, real-time digital vault for managing web discoveries. Built with Next.js 14, Supabase, and Framer Motion.
 
-## Getting Started
+🚀 Features
+Google OAuth Integration: Seamless signup and login via Google.
 
-First, run the development server:
+Real-time Synchronization: Bookmark list updates instantly across all open tabs without refreshing.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+Private Storage: Row Level Security (RLS) ensures users only see their own bookmarks.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Engagement Tracking: Real-time click counter to track your most-visited links.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Dynamic Library: Filter by category (Work, Study, etc.) and sort by popularity or date.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Polished UI: Dark mode support and fluid animations using Framer Motion.
 
-## Learn More
+🛠️ Tech Stack
+Framework: Next.js (App Router)
 
-To learn more about Next.js, take a look at the following resources:
+Database & Auth: Supabase
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Styling: Tailwind CSS
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Animations: Framer Motion
 
-## Deploy on Vercel
+🧠 Problems & Solutions
+During the development of this project, I encountered several technical challenges. Here is how I navigated them:
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+1. The "Sign-Up" Confusion
+   Problem: The requirements asked for both "Sign Up" and "Log In". Initially, I planned to build two separate forms.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Solution: I realized that with Google OAuth, the "Sign Up" and "Log In" flows are technically identical. If a user doesn't exist, Supabase creates them automatically on their first sign-in. I decided to use a single "Continue with Google" button to reduce user friction while still fulfilling the requirement.
+
+2. Real-time Layout Shifts
+   Problem: When a new bookmark was added via the database subscription, the list would "jump" abruptly, creating a poor user experience.
+
+Solution: I implemented Framer Motion's AnimatePresence and layout prop. This allows the list items to slide gracefully into place when a new record is detected by the Supabase Realtime channel.
+
+3. Data Privacy (RLS)
+   Problem: Even if the UI filtered bookmarks by user_id, a malicious user could technically query the database for other people's data.
+
+Solution: I enabled Row Level Security (RLS) in Supabase. I wrote a policy that checks the auth.uid() against the user_id column, ensuring that data is protected at the database level, not just the UI level.
+
+4. Search Debouncing
+   Problem: Every keystroke in the search bar triggered a re-filter of the list, which caused slight lag when the library grew large.
+
+Solution: I implemented a useEffect with a setTimeout to "debounce" the search term. The app now waits 300ms after the user stops typing before filtering the list, significantly improving performance.
+
+🛠️ Installation & Setup
+Clone the repo: git clone https://github.com/your-username/smart-bookmarks.git
+
+Install dependencies: npm install
+
+Env Variables: Create a .env.local file with your NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY.
+
+Run: npm run dev
