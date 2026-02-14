@@ -1,12 +1,13 @@
 @import "tailwindcss";
 
-:root {
-  --foreground-rgb: 0, 0, 0;
-  --background-start-rgb: 249, 250, 251;
-}
+/* 1. Use @apply to hook into Tailwind's v4 theme engine. */
+@layer base {
+  body {
+    @apply bg-slate-50 text-slate-900 transition-colors duration-500;
+  }
 
-
-body {
-  background-color: #f9fafb; 
-  color: #0f172a;           
+  /* 2. v4 handles dark mode automatically, but you can still be explicit */
+  .dark body {
+    @apply bg-slate-900 text-slate-100;
+  }
 }
